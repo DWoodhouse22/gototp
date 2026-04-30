@@ -76,8 +76,8 @@ personal:
   google
 
 work:
-  google
   github
+  google
 ```
 
 
