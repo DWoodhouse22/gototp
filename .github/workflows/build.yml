@@ -30,27 +30,22 @@ jobs:
         run: |
           set -e
 
-          mkdir -p "dist/${{ matrix.goos }}"
-
           EXT=""
           if [ "${{ matrix.goos }}" = "windows" ]; then
             EXT=".exe"
           fi
 
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} \
-            go build -o "dist/${{ matrix.goos }}/gototp${EXT}"
+            go build -o dist/gototp-${{ matrix.goos }}${EXT}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: gototp-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: dist/${{ matrix.goos }}/
+          path: dist/
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: |
-            dist/linux/*
-            dist/windows/*
-            dist/darwin/*
+          files: dist/*
