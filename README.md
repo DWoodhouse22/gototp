@@ -9,11 +9,14 @@ Generate time-based one-time passwords
 ## Usage
 Register a secret token  
 `gototp register name secret`  
+name is a label for the service (e.g github, google)  
 secret must be Base32 encoded (as provided by most 2FA providers / QR codes)   
-name is a label for the service (e.g github, google)
 
 Output a time-based one-time code for 2FA  
 `gototp generate name`  
+
+List registered accounts / services  
+`gototp list`
 
 ## Example
 `gototp register github AHUVY3FPAPNK8GYL`  

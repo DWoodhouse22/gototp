@@ -40,6 +40,19 @@ func LoadAccount(name string) (string, error) {
 	return secret, nil
 }
 
+func ListAccounts() ([]string, error) {
+	cfg, err := loadConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	keys := make([]string, 0, len(cfg.Accounts))
+	for k := range cfg.Accounts {
+		keys = append(keys, k)
+	}
+	return keys, nil
+}
+
 func getPath() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
