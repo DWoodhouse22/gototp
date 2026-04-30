@@ -24,7 +24,7 @@ gototp register <name> <secret> [--group <group>]
 - `<secret>`: the secret token provided by the account provider
 - `--group`, `-g`: Optional group name (e.g. 'work', 'personal' etc)
 
-Names bust me unique within a group
+Names must be unique within a group
 
 ## Generate
 Generate a one-time password for a registered account
