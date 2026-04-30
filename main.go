@@ -8,9 +8,6 @@ import (
 	"github.com/DWoodhouse22/gototp/cmd"
 )
 
-type Config struct {
-}
-
 func main() {
 	registerCmd := flag.String("register", "", "Register secret")
 	generateCmd := flag.Bool("generate", false, "Generate TOTP")
