@@ -1,16 +1,31 @@
 # Gototp
-Module to generate time-based one-time passwords
+Generate time-based one-time passwords
 
-Experimental for now, only works with a single account secret at a time.
+## Install
+
+### Build from source
+`go build -o gototp`
 
 ## Usage
-NEVER share secrets! This is just experimental.
+Register a secret token  
+`gototp register name secret`  
+secret must be Base32 encoded (as provided by most 2FA providers / QR codes)   
+name is a label for the service (e.g github, google)
 
-`-register <secret>` Registers the secret token from your third-party provider  
-`-generate` Outputs a time-based one-time code for 2FA
+Output a time-based one-time code for 2FA  
+`gototp generate name`  
+
+## Example
+`gototp register github AHUVY3FPAPNK8GYL`  
+`gototp generate github`  
+output:
+`123456`
 
 ## Storage
 NEVER share this file.  
+This tool stores secrets in plain text JSON.  
+Do not use on shared machines or production environments.
+
 Secret is stored in the current user's home directory.  
 On Unix / MacOS - `$HOME/.totp_2fa.json`.  
 On Windows - `%USERPROFILE%/.totp_2fa.json`.

@@ -2,15 +2,43 @@ package storage
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 )
 
 type Config struct {
-	Secret string `json:"secret"`
+	Accounts map[string]string `json:"accounts"`
 }
 
 const ownerReadWrite = 0o600
+
+func SaveAccount(name, secret string) error {
+	cfg, err := loadConfig()
+	if err != nil {
+		return err
+	}
+	if cfg.Accounts == nil {
+		cfg.Accounts = make(map[string]string)
+	}
+
+	cfg.Accounts[name] = secret
+	return saveConfig(cfg)
+}
+
+func LoadAccount(name string) (string, error) {
+	cfg, err := loadConfig()
+	if err != nil {
+		return "", err
+	}
+
+	secret, ok := cfg.Accounts[name]
+	if !ok {
+		return "", fmt.Errorf("account not found")
+	}
+
+	return secret, nil
+}
 
 func getPath() (string, error) {
 	home, err := os.UserHomeDir()
@@ -21,9 +49,27 @@ func getPath() (string, error) {
 	return filepath.Join(home, ".totp_2fa.json"), nil
 }
 
-func SaveSecret(secret string) error {
-	cfg := Config{Secret: secret}
-	data, err := json.Marshal(cfg)
+func loadConfig() (Config, error) {
+	path, err := getPath()
+	if err != nil {
+		return Config{}, err
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return Config{}, nil
+		}
+		return Config{}, err
+	}
+
+	var cfg Config
+	err = json.Unmarshal(data, &cfg)
+	return cfg, err
+}
+
+func saveConfig(cfg Config) error {
+	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -34,23 +80,4 @@ func SaveSecret(secret string) error {
 	}
 
 	return os.WriteFile(path, data, ownerReadWrite)
-}
-
-func LoadSecret() (string, error) {
-	path, err := getPath()
-	if err != nil {
-		return "", err
-	}
-
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
-
-	var cfg Config
-	if err := json.Unmarshal(data, &cfg); err != nil {
-		return "", err
-	}
-
-	return cfg.Secret, nil
 }
