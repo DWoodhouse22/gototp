@@ -5,52 +5,93 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/google/uuid"
 )
 
+type Account struct {
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Group  string `json:"group"`
+	Secret string `json:"secret"`
+}
+
 type Config struct {
-	Accounts map[string]string `json:"accounts"`
+	Accounts map[string]Account `json:"accounts"`
 }
 
 const ownerReadWrite = 0o600
 
-func SaveAccount(name, secret string) error {
+func SaveAccount(name, secret, group string) error {
 	cfg, err := loadConfig()
 	if err != nil {
 		return err
 	}
 	if cfg.Accounts == nil {
-		cfg.Accounts = make(map[string]string)
+		cfg.Accounts = make(map[string]Account)
 	}
 
-	cfg.Accounts[name] = secret
+	for _, act := range cfg.Accounts {
+		if act.Name == name && act.Group == group {
+			return fmt.Errorf("account '%s' already exists in group '%s'", name, group)
+		}
+	}
+
+	id := uuid.NewString()
+	act := Account{
+		ID:     id,
+		Name:   name,
+		Secret: secret,
+		Group:  group,
+	}
+	cfg.Accounts[id] = act
 	return saveConfig(cfg)
 }
 
-func LoadAccount(name string) (string, error) {
-	cfg, err := loadConfig()
-	if err != nil {
-		return "", err
-	}
-
-	secret, ok := cfg.Accounts[name]
-	if !ok {
-		return "", fmt.Errorf("account not found")
-	}
-
-	return secret, nil
-}
-
-func ListAccounts() ([]string, error) {
+func FindAccounts(name, group string) ([]Account, error) {
 	cfg, err := loadConfig()
 	if err != nil {
 		return nil, err
 	}
 
-	keys := make([]string, 0, len(cfg.Accounts))
-	for k := range cfg.Accounts {
-		keys = append(keys, k)
+	var out []Account
+	for _, act := range cfg.Accounts {
+		if act.Name != name {
+			continue
+		}
+		if group != "" && act.Group != group {
+			continue
+		}
+		out = append(out, act)
 	}
-	return keys, nil
+	return out, nil
+}
+
+func loadAccount(id string) (string, error) {
+	cfg, err := loadConfig()
+	if err != nil {
+		return "", err
+	}
+
+	act, ok := cfg.Accounts[id]
+	if !ok {
+		return "", fmt.Errorf("account not found")
+	}
+
+	return act.Secret, nil
+}
+
+func ListAccounts() ([]Account, error) {
+	cfg, err := loadConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	accounts := make([]Account, 0, len(cfg.Accounts))
+	for _, act := range cfg.Accounts {
+		accounts = append(accounts, act)
+	}
+	return accounts, nil
 }
 
 func getPath() (string, error) {

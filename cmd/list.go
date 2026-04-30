@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/DWoodhouse22/gototp/storage"
 	"github.com/spf13/cobra"
@@ -19,9 +20,27 @@ func List(cmd *cobra.Command, args []string) {
 		fmt.Println("Error:", err)
 		return
 	}
+	groups := make(map[string][]string)
 
-	for _, name := range accounts {
-		fmt.Println(name)
+	for _, act := range accounts {
+		group := act.Group
+		if group == "" {
+			group = "default"
+		}
+		groups[group] = append(groups[group], act.Name)
+	}
+
+	for g, list := range groups {
+		sort.Strings(list)
+		groups[g] = list
+	}
+
+	for group, names := range groups {
+		fmt.Println(group + ":")
+		for _, name := range names {
+			fmt.Println("  " + name)
+		}
+		fmt.Println()
 	}
 }
 
