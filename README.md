@@ -12,5 +12,5 @@ NEVER share secrets! This is just experimental.
 ## Storage
 NEVER share this file.  
 Secret is stored in the current user's home directory.  
-On Unix / MacOS - `$HOME/.gototp_2fa.json`.  
-On Windows - `%USERPROFILE%/.gototp_2fa.json`.
+On Unix / MacOS - `$HOME/.totp_2fa.json`.  
+On Windows - `%USERPROFILE%/.totp_2fa.json`.
