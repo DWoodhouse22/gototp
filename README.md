@@ -7,12 +7,15 @@ Generate time-based one-time passwords
 `go build -o gototp`
 
 ## Commands
-```bash
-gototp use [group]
-gototp register <name> <secret> [--group <group>]
-gototp generate <name> [--group <group>]
-gototp list
-```
+
+- `gototp use [group]`
+  - [docs](#use)  
+- `gototp register <name> <secret> [--group <group>]`
+  - [docs](#register)
+- `gototp generate <name> [--group <group>]`
+  - [docs](#generate)
+- `gototp list`
+  - [docs](#list)
 
 ## Use
 Switch context to a group for future register and generate commands
