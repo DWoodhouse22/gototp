@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var copyFlag bool
+var flagGroup string
 var rootCmd = &cobra.Command{
 	Use:   "gototp",
 	Short: "Simple TOTP CLI",
@@ -17,8 +19,6 @@ func Execute() {
 		os.Exit(1)
 	}
 }
-
-var flagGroup string
 
 func getEffectiveGroup() (string, error) {
 	effectiveGroup := flagGroup
