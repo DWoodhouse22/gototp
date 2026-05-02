@@ -83,7 +83,7 @@ func handleGroupArg(target string, groupSet map[string]any) {
 	}
 
 	fmt.Printf("Group '%s' does not exist.\n", target)
-	if !confirm("Create and switch to it? (y/N): ") {
+	if !confirm(fmt.Sprintf("Create and switch to '%s'? (y/N): ", target)) {
 		fmt.Println("Cancelled")
 		return
 	}
