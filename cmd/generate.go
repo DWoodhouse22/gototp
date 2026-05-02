@@ -5,6 +5,7 @@ import (
 
 	"github.com/DWoodhouse22/gototp/storage"
 	"github.com/DWoodhouse22/gototp/totp"
+	"github.com/atotto/clipboard"
 	"github.com/spf13/cobra"
 )
 
@@ -34,12 +35,7 @@ func Generate(cmd *cobra.Command, args []string) {
 	}
 
 	if len(accounts) == 1 {
-		code, err := totp.Generate(accounts[0].Secret)
-		if err != nil {
-			fmt.Println("Error:", err)
-			return
-		}
-		fmt.Println(code)
+		generateCode(accounts[0].Secret)
 		return
 	}
 
@@ -57,15 +53,27 @@ func Generate(cmd *cobra.Command, args []string) {
 	}
 
 	selected := accounts[choice-1]
-	code, err := totp.Generate(selected.Secret)
+	generateCode(selected.Secret)
+}
+
+func generateCode(secret string) {
+	code, err := totp.Generate(secret)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
+	}
+	if copyFlag {
+		if err := clipboard.WriteAll(code); err != nil {
+			fmt.Println("Warning: failed to copy to clipboard:", err)
+		} else {
+			fmt.Println("(copied to clipboard)")
+		}
 	}
 	fmt.Println(code)
 }
 
 func init() {
 	generateCmd.Flags().StringVarP(&flagGroup, "group", "g", "", "Group name (default: 'default')")
+	generateCmd.Flags().BoolVarP(&copyFlag, "copy", "c", false, "Copy code to clipboard")
 	rootCmd.AddCommand(generateCmd)
 }

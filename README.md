@@ -12,7 +12,7 @@ Generate time-based one-time passwords
   - [docs](#use)  
 - `gototp register <name> <secret> [--group <group>]`
   - [docs](#register)
-- `gototp generate <name> [--group <group>]`
+- `gototp generate <name> [--group <group> --copy]`
   - [docs](#generate)
 - `gototp list`
   - [docs](#list)
@@ -76,6 +76,7 @@ gototp generate <name> [--group <group>]
 
 - `<name>`: the account name (e.g. 'github', 'google' etc)
 - `--group`, `-g`: Optional group name (e.g. 'work', 'personal' etc)
+- `--copy`, `-c`: Optional, copies the generated code to your clipboard
 
 ### Single match
 If only one account exists with the given name:
