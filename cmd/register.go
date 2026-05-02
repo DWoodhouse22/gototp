@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var group string
 var registerCmd = &cobra.Command{
 	Use:   "register <name> <secret>",
 	Short: "Register a TOTP secret",
@@ -18,11 +17,13 @@ var registerCmd = &cobra.Command{
 func Register(cmd *cobra.Command, args []string) {
 	name := args[0]
 	secret := args[1]
-	if group == "" {
-		group = "default"
+	effectiveGroup, err := getEffectiveGroup()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
 	}
 
-	err := storage.SaveAccount(name, secret, group)
+	err = storage.SaveAccount(name, secret, effectiveGroup)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -32,6 +33,6 @@ func Register(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	registerCmd.Flags().StringVarP(&group, "group", "g", "", "Group name (default: 'default')")
+	registerCmd.Flags().StringVarP(&flagGroup, "group", "g", "", "Group name (default: 'default')")
 	rootCmd.AddCommand(registerCmd)
 }

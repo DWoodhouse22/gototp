@@ -17,7 +17,12 @@ var generateCmd = &cobra.Command{
 
 func Generate(cmd *cobra.Command, args []string) {
 	name := args[0]
-	accounts, err := storage.FindAccounts(name, group)
+	effectiveGroup, err := getEffectiveGroup()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	accounts, err := storage.FindAccounts(name, effectiveGroup)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -61,6 +66,6 @@ func Generate(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	generateCmd.Flags().StringVarP(&group, "group", "g", "", "Group name (default: 'default')")
+	generateCmd.Flags().StringVarP(&flagGroup, "group", "g", "", "Group name (default: 'default')")
 	rootCmd.AddCommand(generateCmd)
 }
