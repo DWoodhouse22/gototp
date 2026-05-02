@@ -17,7 +17,8 @@ type Account struct {
 }
 
 type Config struct {
-	Accounts map[string]Account `json:"accounts"`
+	Accounts     map[string]Account `json:"accounts"`
+	CurrentGroup string             `json:"current_group"`
 }
 
 const ownerReadWrite = 0o600
@@ -67,18 +68,23 @@ func FindAccounts(name, group string) ([]Account, error) {
 	return out, nil
 }
 
-func loadAccount(id string) (string, error) {
+func SetCurrentGroup(group string) error {
+	cfg, err := loadConfig()
+	if err != nil {
+		return err
+	}
+
+	cfg.CurrentGroup = group
+	return saveConfig(cfg)
+}
+
+func GetCurrentGroup() (string, error) {
 	cfg, err := loadConfig()
 	if err != nil {
 		return "", err
 	}
 
-	act, ok := cfg.Accounts[id]
-	if !ok {
-		return "", fmt.Errorf("account not found")
-	}
-
-	return act.Secret, nil
+	return cfg.CurrentGroup, nil
 }
 
 func ListAccounts() ([]Account, error) {
