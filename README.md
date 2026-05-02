@@ -8,15 +8,53 @@ Generate time-based one-time passwords
 
 ## Commands
 ```bash
+gototp use [group]
 gototp register <name> <secret> [--group <group>]
 gototp generate <name> [--group <group>]
 gototp list
 ```
 
+## Use
+Switch context to a group for future register and generate commands
+### Usage
+```
+gotop use [group]
+```
+
+- `[group]` Optional group name (e.g. 'work', 'personal' etc)
+
+### Group does not exist
+```
+gototp use work
+Current group: personal
+
+Group 'work' does not exist.
+Create and switch to it? (y/N): n
+```
+
+### Group exists
+```
+gototp use personal
+Current group: work
+
+Switched to group 'personal'
+```
+
+### No group specified
+```text
+gototp use
+Current group: personal
+
+Available groups:
+1) personal
+2) work
+
+Select a group:
+```
 ## Register
 Register a new account
 ### Usage
-```bash
+```
 gototp register <name> <secret> [--group <group>]
 ```
 
@@ -29,7 +67,7 @@ Names must be unique within a group
 ## Generate
 Generate a one-time password for a registered account
 ### Usage
-```bash
+```
 gototp generate <name> [--group <group>]
 ```
 
@@ -39,7 +77,7 @@ gototp generate <name> [--group <group>]
 ### Single match
 If only one account exists with the given name:
 
-```bash
+```
 gototp generate github
 123456
 ```
@@ -47,7 +85,7 @@ gototp generate github
 ### Multiple matches (no group specified)
 
 If multiple accounts exist with the same name across different groups, you will be prompted to choose:
-```text
+```
 Multiple accounts found for 'github':
 
 1) github (work)
@@ -61,7 +99,7 @@ Enter the number corresponding to the account to generate the code.
 
 To skip the selection prompt, provide a group:
 
-```bash
+```
 gototp generate github --group work
 123456
 ```
@@ -69,7 +107,7 @@ gototp generate github --group work
 ## List
 List all registered accounts
 ### Usage
-```bash
+```
 gototp list
 personal:
   github
