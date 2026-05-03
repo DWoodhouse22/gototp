@@ -100,6 +100,20 @@ func ListAccounts() ([]Account, error) {
 	return accounts, nil
 }
 
+func RemoveAccount(a Account) error {
+	cfg, err := loadConfig()
+	if err != nil {
+		return err
+	}
+
+	if _, ok := cfg.Accounts[a.ID]; !ok {
+		return fmt.Errorf("account does not exist")
+	}
+
+	delete(cfg.Accounts, a.ID)
+	return nil
+}
+
 func getPath() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
