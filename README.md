@@ -14,6 +14,8 @@ Generate time-based one-time passwords
   - [docs](#register)
 - `gototp generate <name> [--group <group> --copy]`
   - [docs](#generate)
+- `gototp remove <name> [--group <group> --force]`
+  - [docs](#remove)
 - `gototp list`
   - [docs](#list)
 
@@ -108,6 +110,16 @@ gototp generate github --group work
 123456
 ```
 
+## Remove
+Remove a registered account
+### Usage
+```
+gototp remove github <name> [--group <group> --force]
+```
+- `<name>`: The account name (e.g. 'github'. 'google' etc)
+- `--group`, `-g`: Optional group name (e.g. 'work', 'personal' etc)
+- `--force`, `-f`: Optional, force removal and skip confirmation
+
 ## List
 List all registered accounts
 ### Usage
@@ -121,7 +133,6 @@ work:
   github
   google
 ```
-
 
 ## Storage
 NEVER share this file.  
