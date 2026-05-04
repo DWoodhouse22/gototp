@@ -114,7 +114,7 @@ gototp generate github --group work
 Remove a registered account
 ### Usage
 ```
-gototp remove github <name> [--group <group> --force]
+gototp remove <name> [--group <group> --force]
 ```
 - `<name>`: The account name (e.g. 'github'. 'google' etc)
 - `--group`, `-g`: Optional group name (e.g. 'work', 'personal' etc)
