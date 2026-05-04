@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var flagForce bool
 var copyFlag bool
 var flagGroup string
 var rootCmd = &cobra.Command{

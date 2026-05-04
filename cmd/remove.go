@@ -33,7 +33,7 @@ func Remove(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	if !confirm(fmt.Sprintf("Remove '%s' (%s)? (y/N): ", name, effectiveGroup)) {
+	if !flagForce && !confirm(fmt.Sprintf("Remove '%s' (%s)? (y/N): ", name, effectiveGroup)) {
 		fmt.Println("Cancelled")
 		return
 	}
@@ -47,5 +47,7 @@ func Remove(cmd *cobra.Command, args []string) {
 }
 
 func init() {
+	removeCmd.Flags().StringVarP(&flagGroup, "group", "g", "", "Group name (default: 'default')")
+	removeCmd.Flags().BoolVarP(&flagForce, "force", "f", false, "Force, skip confirmation")
 	rootCmd.AddCommand(removeCmd)
 }
